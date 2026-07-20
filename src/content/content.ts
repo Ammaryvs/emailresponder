@@ -7,7 +7,7 @@ import { TONE_PRESETS, type ToneKey } from "../lib/tonePresets";
  * Gmail's DOM is undocumented and can change without notice. These selectors are
  * best-effort and may need updating if Gmail's markup shifts.
  */
-const REPLY_BUTTON_SELECTOR = '[role="button"][aria-label="Reply"]';
+const REPLY_BUTTON_SELECTOR = ".ams.bkH";
 const COMPOSE_BOX_SELECTOR = 'div[aria-label^="Message Body"][contenteditable="true"]';
 const INJECTED_ATTR = "data-gra-button";
 
