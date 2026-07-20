@@ -9,7 +9,7 @@ getApiKey(chrome.storage.sync).then((apiKey) => {
 });
 
 saveButton.addEventListener("click", async () => {
-  await setApiKey(apiKeyInput.value.trim(), chrome.storage.sync);
+  await setApiKey(chrome.storage.sync, apiKeyInput.value.trim());
   statusEl.textContent = "Saved.";
   setTimeout(() => {
     statusEl.textContent = "";

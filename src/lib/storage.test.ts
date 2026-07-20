@@ -30,7 +30,7 @@ describe("setApiKey", () => {
   it("persists the key under the expected storage key", async () => {
     const storage = fakeStorage();
 
-    await setApiKey("sk-ant-xyz", storage);
+    await setApiKey(storage, "sk-ant-xyz");
 
     expect(storage.set).toHaveBeenCalledWith({ [API_KEY_STORAGE_KEY]: "sk-ant-xyz" });
   });

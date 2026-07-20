@@ -40,6 +40,8 @@ function injectTriggerButtons(): void {
     trigger.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();
+      // Open Gmail's own reply editor first so a compose box exists for Insert to target.
+      replyButton.click();
       openPreviewPanel();
     });
 

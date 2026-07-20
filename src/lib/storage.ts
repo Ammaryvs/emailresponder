@@ -11,6 +11,6 @@ export async function getApiKey(storage: SyncStorageArea): Promise<string | unde
   return typeof value === "string" ? value : undefined;
 }
 
-export async function setApiKey(apiKey: string, storage: SyncStorageArea): Promise<void> {
+export async function setApiKey(storage: SyncStorageArea, apiKey: string): Promise<void> {
   await storage.set({ [API_KEY_STORAGE_KEY]: apiKey });
 }
