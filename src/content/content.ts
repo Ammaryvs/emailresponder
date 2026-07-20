@@ -36,7 +36,7 @@ function injectTriggerButtons(): void {
     const trigger = document.createElement("button");
     trigger.type = "button";
     trigger.className = "gra-trigger";
-    trigger.textContent = "✨ Draft with Claude";
+    trigger.textContent = "✨ Draft with AI";
     trigger.addEventListener("click", (event) => {
       event.preventDefault();
       event.stopPropagation();

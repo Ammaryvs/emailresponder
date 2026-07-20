@@ -1,5 +1,5 @@
 import { describe, expect, it, vi } from "vitest";
-import { generateReply } from "./anthropicClient";
+import { generateReply } from "./openAiClient";
 
 function jsonResponse(body: unknown, ok = true, status = 200): Response {
   return {
@@ -10,32 +10,30 @@ function jsonResponse(body: unknown, ok = true, status = 200): Response {
 }
 
 describe("generateReply", () => {
-  const params = { apiKey: "sk-ant-test", system: "sys", user: "usr" };
+  const params = { apiKey: "sk-test", system: "sys", user: "usr" };
 
-  it("calls the Anthropic messages endpoint with the required headers", async () => {
+  it("calls the OpenAI chat completions endpoint with the required headers", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(
-      jsonResponse({ content: [{ type: "text", text: "Draft reply" }] }),
+      jsonResponse({ choices: [{ message: { content: "Draft reply" } }] }),
     );
 
     await generateReply(params, fetchImpl);
 
     expect(fetchImpl).toHaveBeenCalledWith(
-      "https://api.anthropic.com/v1/messages",
+      "https://api.openai.com/v1/chat/completions",
       expect.objectContaining({
         method: "POST",
         headers: expect.objectContaining({
-          "x-api-key": "sk-ant-test",
-          "anthropic-version": "2023-06-01",
-          "anthropic-dangerous-direct-browser-access": "true",
+          authorization: "Bearer sk-test",
           "content-type": "application/json",
         }),
       }),
     );
   });
 
-  it("resolves with the text from the first content block", async () => {
+  it("resolves with the message content from the first choice", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(
-      jsonResponse({ content: [{ type: "text", text: "Draft reply" }] }),
+      jsonResponse({ choices: [{ message: { content: "Draft reply" } }] }),
     );
 
     await expect(generateReply(params, fetchImpl)).resolves.toBe("Draft reply");
@@ -43,10 +41,10 @@ describe("generateReply", () => {
 
   it("rejects with the API's error message on a non-ok response", async () => {
     const fetchImpl = vi.fn().mockResolvedValue(
-      jsonResponse({ error: { message: "invalid x-api-key" } }, false, 401),
+      jsonResponse({ error: { message: "Incorrect API key provided" } }, false, 401),
     );
 
-    await expect(generateReply(params, fetchImpl)).rejects.toThrow("invalid x-api-key");
+    await expect(generateReply(params, fetchImpl)).rejects.toThrow("Incorrect API key provided");
   });
 
   it("rejects with a wrapped error when the network request itself fails", async () => {

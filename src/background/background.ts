@@ -1,4 +1,4 @@
-import { generateReply } from "../lib/anthropicClient";
+import { generateReply } from "../lib/openAiClient";
 import { GENERATE_REPLY_MESSAGE, type GenerateReplyRequest, type GenerateReplyResponse } from "../lib/messaging";
 import { buildReplyPrompt } from "../lib/promptBuilder";
 import { getApiKey } from "../lib/storage";
@@ -16,7 +16,7 @@ async function handleGenerateReply(message: GenerateReplyRequest): Promise<Gener
   try {
     const apiKey = await getApiKey(chrome.storage.sync);
     if (!apiKey) {
-      return { ok: false, error: "No Claude API key set. Add one in the extension's options page." };
+      return { ok: false, error: "No OpenAI API key set. Add one in the extension's options page." };
     }
 
     const { system, user } = buildReplyPrompt(message.emailText, message.tone);
