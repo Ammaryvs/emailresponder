@@ -121,22 +121,32 @@ function openPreviewPanel(): void {
     }
 
     const tone = toneSelect.value as ToneKey;
-    chrome.runtime.sendMessage(
-      { type: GENERATE_REPLY_MESSAGE, emailText, tone },
-      (response: GenerateReplyResponse) => {
-        if (!activePanel) return;
-        if (!response.ok) {
-          showError(response.error);
-          return;
-        }
-        draftEl.hidden = false;
-        draftEl.readOnly = false;
-        draftEl.value = response.text;
-        insertBtn.hidden = false;
-        actionBtn.disabled = false;
-        actionBtn.textContent = "Regenerate";
-      },
-    );
+    const CONNECTION_LOST_MESSAGE = "Lost connection to the extension. Please refresh this Gmail tab and try again.";
+
+    try {
+      chrome.runtime.sendMessage(
+        { type: GENERATE_REPLY_MESSAGE, emailText, tone },
+        (response: GenerateReplyResponse) => {
+          if (!activePanel) return;
+          if (chrome.runtime.lastError || !response) {
+            showError(CONNECTION_LOST_MESSAGE);
+            return;
+          }
+          if (!response.ok) {
+            showError(response.error);
+            return;
+          }
+          draftEl.hidden = false;
+          draftEl.readOnly = false;
+          draftEl.value = response.text;
+          insertBtn.hidden = false;
+          actionBtn.disabled = false;
+          actionBtn.textContent = "Regenerate";
+        },
+      );
+    } catch {
+      showError(CONNECTION_LOST_MESSAGE);
+    }
   }
 
   generate();
