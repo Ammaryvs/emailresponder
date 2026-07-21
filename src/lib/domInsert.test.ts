@@ -48,4 +48,13 @@ describe("insertReplyText", () => {
     expect(box.textContent).toBe("Use <b>bold</b> & <i>italics</i>");
     expect(box.querySelector("b")).toBeNull();
   });
+
+  it("strips Markdown the user typed into the (editable) preview textarea", () => {
+    const box = document.createElement("div");
+    box.contentEditable = "true";
+
+    insertReplyText(box, "Sounds **great**, thanks!");
+
+    expect(box.textContent).toBe("Sounds great, thanks!");
+  });
 });

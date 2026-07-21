@@ -29,4 +29,18 @@ describe("stripMarkdownFormatting", () => {
       "Hi Sam,\n\nSounds good.\n\nThanks,\nAlex",
     );
   });
+
+  it("does not mangle snake_case identifiers", () => {
+    expect(stripMarkdownFormatting("Please rename my_variable_name.")).toBe(
+      "Please rename my_variable_name.",
+    );
+  });
+
+  it("does not treat spaced-out asterisks (e.g. multiplication) as emphasis", () => {
+    expect(stripMarkdownFormatting("5 * 3 and 6 * 2")).toBe("5 * 3 and 6 * 2");
+  });
+
+  it("removes bold markers that span multiple lines", () => {
+    expect(stripMarkdownFormatting("**line one\nline two**")).toBe("line one\nline two");
+  });
 });

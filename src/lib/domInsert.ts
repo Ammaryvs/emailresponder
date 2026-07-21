@@ -1,6 +1,8 @@
+import { stripMarkdownFormatting } from "./markdown";
+
 export function insertReplyText(composeBox: HTMLElement, text: string): void {
   composeBox.focus();
-  composeBox.innerHTML = textToHtml(text);
+  composeBox.innerHTML = textToHtml(stripMarkdownFormatting(text));
   composeBox.dispatchEvent(new Event("input", { bubbles: true }));
 }
 
