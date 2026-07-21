@@ -3,7 +3,7 @@ import { defineConfig } from "vite";
 export default defineConfig({
   build: {
     outDir: "dist",
-    emptyOutDir: true,
+    emptyOutDir: false,
     lib: {
       entry: "src/background/background.ts",
       formats: ["es"],

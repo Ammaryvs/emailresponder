@@ -13,6 +13,8 @@ export function buildReplyPrompt(originalEmail: string, tone: ToneKey): ReplyPro
   const system = [
     "You draft replies to emails on behalf of the user, for insertion into Gmail's reply box.",
     "Reply with only the body text of the reply — no subject line, no quoting of the original email.",
+    "Write plain text only: no Markdown (no **bold**, *italics*, backticks, or # headings) and no bullet lists — Gmail's reply box is not a Markdown renderer, so any Markdown syntax will show up as literal characters.",
+    "Format it like a real email: separate the greeting, each paragraph, and the sign-off with a blank line between them.",
     TONE_PRESETS[tone].instruction,
   ].join(" ");
 

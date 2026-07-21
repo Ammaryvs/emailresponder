@@ -10,12 +10,17 @@
     "build:options": "vite build --config vite.config.options.ts",
     "copy:static": "node scripts/copy-static.mjs",
     "build": "npm run build:background && npm run build:content && npm run build:options && npm run copy:static",
+    "watch:background": "vite build --config vite.config.background.ts --watch",
+    "watch:content": "vite build --config vite.config.content.ts --watch",
+    "watch:options": "vite build --config vite.config.options.ts --watch",
+    "dev": "npm run copy:static && concurrently -n bg,content,options -c blue,green,yellow \"npm:watch:background\" \"npm:watch:content\" \"npm:watch:options\"",
     "test": "vitest run",
     "typecheck": "tsc --noEmit"
   },
   "devDependencies": {
     "@types/chrome": "^0.0.287",
     "@types/node": "^22.10.2",
+    "concurrently": "^9.1.2",
     "jsdom": "^25.0.1",
     "typescript": "^5.7.2",
     "vite": "^6.0.3",

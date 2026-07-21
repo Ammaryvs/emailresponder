@@ -1,5 +1,6 @@
-import { generateReply } from "../lib/openAiClient";
 import { GENERATE_REPLY_MESSAGE, type GenerateReplyRequest, type GenerateReplyResponse } from "../lib/messaging";
+import { stripMarkdownFormatting } from "../lib/markdown";
+import { generateReply } from "../lib/openAiClient";
 import { buildReplyPrompt } from "../lib/promptBuilder";
 import { getApiKey } from "../lib/storage";
 
@@ -21,7 +22,7 @@ async function handleGenerateReply(message: GenerateReplyRequest): Promise<Gener
 
     const { system, user } = buildReplyPrompt(message.emailText, message.tone);
     const text = await generateReply({ apiKey, system, user });
-    return { ok: true, text };
+    return { ok: true, text: stripMarkdownFormatting(text) };
   } catch (err) {
     return { ok: false, error: err instanceof Error ? err.message : String(err) };
   }

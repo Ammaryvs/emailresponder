@@ -26,4 +26,26 @@ describe("insertReplyText", () => {
     expect(bubbled).toBe(true);
     document.body.removeChild(box);
   });
+
+  it("preserves line breaks as separate block elements", () => {
+    const box = document.createElement("div");
+    box.contentEditable = "true";
+
+    insertReplyText(box, "Hi Sam,\n\nSounds good.\n\nThanks,\nAlex");
+
+    expect(box.querySelectorAll("div")).toHaveLength(6);
+    expect(box.innerHTML).toBe(
+      "<div>Hi Sam,</div><div><br></div><div>Sounds good.</div><div><br></div><div>Thanks,</div><div>Alex</div>",
+    );
+  });
+
+  it("escapes HTML special characters in the text", () => {
+    const box = document.createElement("div");
+    box.contentEditable = "true";
+
+    insertReplyText(box, "Use <b>bold</b> & <i>italics</i>");
+
+    expect(box.textContent).toBe("Use <b>bold</b> & <i>italics</i>");
+    expect(box.querySelector("b")).toBeNull();
+  });
 });
