@@ -5,7 +5,7 @@ export interface ReplyPrompt {
   user: string;
 }
 
-export function buildReplyPrompt(originalEmail: string, tone: ToneKey): ReplyPrompt {
+export function buildReplyPrompt(originalEmail: string, tone: ToneKey, intention: string): ReplyPrompt {
   if (originalEmail.trim().length === 0) {
     throw new Error("Cannot draft a reply to an empty email.");
   }
@@ -18,7 +18,11 @@ export function buildReplyPrompt(originalEmail: string, tone: ToneKey): ReplyPro
     TONE_PRESETS[tone].instruction,
   ].join(" ");
 
-  const user = `Draft a reply to this email:\n\n${originalEmail}`;
+  let user = `Draft a reply to this email:\n\n${originalEmail}`;
+  const trimmedIntention = intention.trim();
+  if (trimmedIntention.length > 0) {
+    user += `\n\nIncorporate this guidance from the user about what they want to say:\n${trimmedIntention}`;
+  }
 
   return { system, user };
 }

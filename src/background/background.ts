@@ -20,7 +20,7 @@ async function handleGenerateReply(message: GenerateReplyRequest): Promise<Gener
       return { ok: false, error: "No OpenAI API key set. Add one in the extension's options page." };
     }
 
-    const { system, user } = buildReplyPrompt(message.emailText, message.tone);
+    const { system, user } = buildReplyPrompt(message.emailText, message.tone, message.intention);
     const text = await generateReply({ apiKey, system, user });
     return { ok: true, text: stripMarkdownFormatting(text) };
   } catch (err) {

@@ -6,6 +6,7 @@ export interface GenerateReplyRequest {
   type: typeof GENERATE_REPLY_MESSAGE;
   emailText: string;
   tone: ToneKey;
+  intention: string;
 }
 
 export type GenerateReplyResponse = { ok: true; text: string } | { ok: false; error: string };

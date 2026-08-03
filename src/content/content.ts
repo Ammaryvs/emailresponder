@@ -19,6 +19,7 @@ function injectStyles(): void {
     .gra-panel { position: fixed; bottom: 24px; right: 24px; width: 360px; background: #fff; border: 1px solid #dadce0; border-radius: 8px; box-shadow: 0 2px 10px rgba(0,0,0,0.2); padding: 16px; z-index: 9999; font-family: Arial, sans-serif; font-size: 13px; color: #202124; }
     .gra-panel select { width: 100%; margin-bottom: 8px; padding: 4px; }
     .gra-panel textarea { width: 100%; min-height: 120px; box-sizing: border-box; margin-bottom: 8px; font-family: inherit; font-size: inherit; }
+    .gra-panel .gra-intention { min-height: 48px; }
     .gra-panel .gra-actions { display: flex; gap: 8px; }
     .gra-panel button { padding: 6px 12px; cursor: pointer; }
     .gra-panel button:disabled { cursor: default; opacity: 0.6; }
@@ -67,6 +68,7 @@ function openPreviewPanel(): void {
         .map(([key, preset]) => `<option value="${key}">${preset.label}</option>`)
         .join("")}
     </select>
+    <textarea class="gra-intention" placeholder="Anything specific to say? (optional)"></textarea>
     <div class="gra-error" hidden></div>
     <textarea class="gra-draft" hidden readonly></textarea>
     <div class="gra-actions">
@@ -79,6 +81,7 @@ function openPreviewPanel(): void {
   activePanel = panel;
 
   const toneSelect = panel.querySelector<HTMLSelectElement>(".gra-tone")!;
+  const intentionEl = panel.querySelector<HTMLTextAreaElement>(".gra-intention")!;
   const errorEl = panel.querySelector<HTMLElement>(".gra-error")!;
   const draftEl = panel.querySelector<HTMLTextAreaElement>(".gra-draft")!;
   const insertBtn = panel.querySelector<HTMLButtonElement>(".gra-insert")!;
@@ -121,11 +124,12 @@ function openPreviewPanel(): void {
     }
 
     const tone = toneSelect.value as ToneKey;
+    const intention = intentionEl.value.trim();
     const CONNECTION_LOST_MESSAGE = "Lost connection to the extension. Please refresh this Gmail tab and try again.";
 
     try {
       chrome.runtime.sendMessage(
-        { type: GENERATE_REPLY_MESSAGE, emailText, tone },
+        { type: GENERATE_REPLY_MESSAGE, emailText, tone, intention },
         (response: GenerateReplyResponse) => {
           if (!activePanel) return;
           if (chrome.runtime.lastError || !response) {
